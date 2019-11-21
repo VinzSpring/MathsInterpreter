@@ -1,5 +1,5 @@
 # MathsRuntime
-This is a simple monadic, recursive interpreter for mathematical expressions.
+This is a simple monadic, recursive scripting environment for mathematical expressions.
 # syntax
 
 ## shell comands:
@@ -19,6 +19,8 @@ This is a simple monadic, recursive interpreter for mathematical expressions.
 - PI
 
 ## define custom functions
+All functions are scoped.
+Use recursion and it will never stop!
 ```
 sum(a,b):a+b
 //sum(1,2) -> 3.0
