@@ -3,9 +3,9 @@ This is a simple monadic, recursive scripting environment for mathematical expre
 # syntax
 
 ## shell comands:
-- exit() //exit shell
-- ls vars //list variables defined in global scope
-- ls funcs //list functions defined in global scope
+- exit() exit shell
+- ls vars list variables defined in global scope
+- ls funcs list functions defined in global scope
 
 ## inbuilt functions:
 - sin(x)
@@ -30,7 +30,7 @@ sum(a,b,c):a+b+c
 
 ```
 
-## example
+## example (interaction with shell)
 ```
 a = 1+2
 a
