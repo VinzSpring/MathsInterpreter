@@ -14,6 +14,8 @@ from pprint import pprint
 
 """
 
+class RuntimeException(Exception):
+    pass
 
 def split_outer_levelx(s, m):
     i = 0
@@ -149,7 +151,7 @@ def call(input, scope: Scope):
     is_builtin_func = fn_name in scope.builtin_funcs
     is_custom_func = fn_name in scope.funcs
     if not (is_builtin_func or is_custom_func):
-        raise Exception("function '{}' not defined in scope!".format(fn_name))
+        raise RuntimeException("function '{}' not defined in scope!".format(fn_name))
 
     simplified = [None for i in range(len(args))]
     for i in range(len(args)):
@@ -159,7 +161,7 @@ def call(input, scope: Scope):
         return val(scope.builtin_funcs[fn_name](simplified), scope)
 
     fn = scope.funcs[fn_name]
-    vars = scope.vars.copy()
+    vars = {}
     for i in range(len(fn.arg_names)):
         vars[fn.arg_names[i]] = simplified[i]
     return expr(fn.body, Scope(vars=vars, funcs=scope.funcs))
@@ -167,7 +169,7 @@ def call(input, scope: Scope):
 
 def var(input, scope: Scope):
     if input not in scope.vars:
-        raise Exception("use of undefined variable '{}'".format(input))
+        raise RuntimeException("use of undefined variable '{}'".format(input))
     return scope.vars[input]
 
 
@@ -184,6 +186,7 @@ class Runtime:
             self.execute_statement(line)
 
     def execute_statement(self, line):
+        line = line.replace(" ", "").replace("\n", "").replace("\t", "")
         ops = [
             func_definition,
             assignment,
@@ -195,6 +198,8 @@ class Runtime:
                 if res:
                     pprint(res)
                 break
+            except RuntimeException as e:
+                pprint("ERROR: {}".format(str(e)))
             except:
                 pass
         return self
@@ -211,21 +216,5 @@ class Runtime:
 
 
 if __name__ == "__main__":
-    scope = Scope(
-        vars={
-            "x": 2,
-            "y": 3,
-        },
-        funcs={
-            "fn": Fun("a+b", ["a", "b"])
-        }
-    )
-    # r = expr("fn(1,2*sin(2))*2/4+4*1+((2+3)/23*PI)", scope)
-    #r = expr("2*x", scope)
-
-    test = "quadratic(n):n*n\na=quadratic(2)+1\nb=a+1"
     runtime = Runtime()
-    #runtime.execute_statements(test)
     runtime.start_shell()
-    i = 0
-    runtime.execute_statements(test)
